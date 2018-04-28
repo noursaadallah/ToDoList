@@ -5,17 +5,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HomeComponent } from './home/home.component';
-import { AboutComponent } from './about/about.component';
 import { BrowserAnimationBuilder } from '@angular/platform-browser/animations/src/animation_builder';
-import { DataService } from './data.service';
 
 
 @NgModule({
   declarations: [
-    AppComponent,
-    HomeComponent,
-    AboutComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -23,7 +18,7 @@ import { DataService } from './data.service';
     FormsModule,
     BrowserAnimationsModule
   ],
-  providers: [DataService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
