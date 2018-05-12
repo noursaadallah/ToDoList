@@ -38,15 +38,15 @@ export class AppComponent implements OnInit {
   }
 
   get todos() {
-    return this.todoDataService.getAllTodos();
+    return this.todoDataService.getAllTodos()
   }
 
   get todosForCat() {
     return this.todoDataService.getTodoByCategory(this.selectedCategory.id);
   }
 
-  countTodosByCat(id: number) {
-    return this.todoDataService.getTodoByCategory(id).length;
+  todosByCat(id: number) {
+    return this.todoDataService.getTodoByCategory(id);
   }
 
   addCategory() {

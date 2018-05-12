@@ -8,9 +8,9 @@
   <div class="row mt-5 ">
     <div class="col-md-3 offset-md-2 left-column mb-1">
       <ul class="list-group">
-        <li *ngFor="let category of categories" class="list-group-item d-flex justify-content-between align-items-center" (click)="onSelect(category)">
+        <li *ngFor="let category of categories | async" class="list-group-item d-flex justify-content-between align-items-center" (click)="onSelect(category)">
           {{category.name}}
-          <span class="badge primary-color badge-pill">{{countTodosByCat(category.id)}}</span>
+          <span class="badge primary-color badge-pill">{{ (todosByCat(category.id) | async)?.length  }}</span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
           <form>
@@ -32,9 +32,9 @@
         </div>
       </div>
       <div class="row px-4 mt-3">
-        <div class="form-group full-width" *ngIf="todosForCat.length > 0">
+        <div class="form-group full-width" *ngIf="(todosForCat | async)?.length > 0">
           <form class="full-width">
-            <div *ngFor="let todo of todosForCat">
+            <div *ngFor="let todo of todosForCat | async">
               <input type="checkbox" id="{{todo.id}}" (click)="toggleTodoComplete(todo)" [checked]="todo.complete">
               <label for="{{todo.id}}" [ngClass]="{'strikethrough' : todo.complete}">{{todo.title}}</label>
               <button type="button" class="close" aria-label="Close" style="float: right;" (click)="removeTodo(todo)">
