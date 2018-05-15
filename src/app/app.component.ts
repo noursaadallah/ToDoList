@@ -17,6 +17,10 @@ export class AppComponent implements OnInit {
   newTodo: Todo = new Todo();
   newCategory: Category = new Category();
   selectedCategory: Category;
+  _todos: Todo[];
+  _allTodos: Todo[];
+  _categories : Category[];
+  _todosForCat : Todo[];
 
   constructor(private todoDataService: TodoDataService, private categoryDataService: CategoryDataService) {
   }
@@ -24,81 +28,83 @@ export class AppComponent implements OnInit {
 
   addTodo() {
     this.newTodo.category = this.selectedCategory.id;
-    this.todoDataService.addTodo(this.newTodo);
+    this.todoDataService.addTodo(this.newTodo).subscribe(
+      res => this._todosForCat.push(res)
+    );
     this.newTodo = new Todo();
-    console.log(this.todos);
   }
 
   toggleTodoComplete(todo) {
-    this.todoDataService.toggleTodoComplete(todo);
+    let index = this._todosForCat.findIndex(t => t.id == todo.id);
+    this.todoDataService.toggleTodoComplete(todo).subscribe(
+      res =>  this._todosForCat[index] = res
+    );
   }
 
   removeTodo(todo) {
-    this.todoDataService.deleteTodoById(todo.id);
+    this.todoDataService.deleteTodoById(todo.id).subscribe();
+    this._todosForCat = this._todosForCat.filter(t => t.id !== todo.id);
   }
 
   get todos() {
-    return this.todoDataService.getAllTodos()
+    let todos_ = [];
+    this.todoDataService.getAllTodos().subscribe(
+      res => { todos_ = res ; }
+    );
+    return todos_;
   }
 
-  get todosForCat() {
-    return this.todoDataService.getTodoByCategory(this.selectedCategory.id);
+  getTodosForCat() {
+    this.todoDataService.getTodoByCategory(this.selectedCategory.id).subscribe(
+      res => { this._todosForCat = res ; }
+    );
   }
 
   todosByCat(id: number) {
-    return this.todoDataService.getTodoByCategory(id);
+    this.todoDataService.getTodoByCategory(id).subscribe(
+      res => { this._todos = res; }
+    );
   }
 
   addCategory() {
-    this.categoryDataService.addCategory(this.newCategory);
+    this.categoryDataService.addCategory(this.newCategory).subscribe(
+      res => this._categories.push(res)
+    );
     this.newCategory = new Category();
   }
 
   removeCategory(category) {
-    this.categoryDataService.deleteCategoryById(category.id);
+    // this.categoryDataService.deleteCategoryById(category.id);
   }
 
   get categories() {
-    return this.categoryDataService.getAllCategories();
+    let cats_ = [];
+    this.categoryDataService.getAllCategories().subscribe(
+      res => { cats_ = res; }
+    );
+    return cats_;
   }
 
   categoryById(id: number) {
-    return this.categoryDataService.getCategoryById(id);
-  }
-
-  addInitialCategory(category) {
-    this.categoryDataService.addCategory(category);
-  }
-
-  addInitialTodo(todo) {
-    this.todoDataService.addTodo(todo);
+    return this.categoryDataService.getCategoryById(id).subscribe();
   }
 
 
   onSelect(category: Category): void {
     this.selectedCategory = category;
+    this.todoDataService.getTodoByCategory(this.selectedCategory.id).subscribe(
+      res => { this._todosForCat = res ; }
+    );
   }
 
   ngOnInit() {
-    let initCat = new Category();
-    initCat = {'name' : 'Today', 'id' : null , };
-    this.addInitialCategory(initCat);
-    initCat = {'name' : 'Tomorrow', 'id' : null , };
-    this.addInitialCategory(initCat);
-    initCat = {'name' : 'Work', 'id' : null , };
-    this.addInitialCategory(initCat);
-    initCat = {'name' : 'Holidays', 'id' : null , };
-    this.addInitialCategory(initCat);
-    initCat = {'name' : 'Shopping list', 'id' : null , };
-    this.addInitialCategory(initCat);
+    this.categoryDataService.getAllCategories().subscribe(
+      res => {this._categories = res;}
+    );
 
-    let initTodo = new Todo();
-    initTodo = {'title' : 'Task1', 'complete': false, 'id' : null , category: 1 };
-    this.addInitialTodo(initTodo);
-    initTodo = {'title' : 'Task2', 'complete': true, 'id' : null , category: 2 };
-    this.addInitialTodo(initTodo);
-    initTodo = {'title' : 'Task3', 'complete': true, 'id' : null , category: 1 };
-    this.addInitialTodo(initTodo);
+    this._todosForCat = [];
+
+    this.todoDataService.getAllTodos().subscribe(res => this._allTodos = res);
   }
 
 }
