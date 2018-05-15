@@ -31,6 +31,7 @@ export class AppComponent implements OnInit {
     this.todoDataService.addTodo(this.newTodo).subscribe(
       res => this._todosForCat.push(res)
     );
+    this._categories.find(c => c.id == this.selectedCategory.id).todosCount++;
     this.newTodo = new Todo();
   }
 
@@ -44,6 +45,7 @@ export class AppComponent implements OnInit {
   removeTodo(todo) {
     this.todoDataService.deleteTodoById(todo.id).subscribe();
     this._todosForCat = this._todosForCat.filter(t => t.id !== todo.id);
+    this._categories.find(c => c.id == this.selectedCategory.id).todosCount--;
   }
 
   get todos() {
@@ -74,7 +76,7 @@ export class AppComponent implements OnInit {
   }
 
   removeCategory(category) {
-    // this.categoryDataService.deleteCategoryById(category.id);
+    this.categoryDataService.deleteCategoryById(category.id);
   }
 
   get categories() {

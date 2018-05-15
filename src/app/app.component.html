@@ -10,7 +10,7 @@
       <ul class="list-group">
         <li *ngFor="let category of _categories" class="list-group-item d-flex justify-content-between align-items-center" (click)="onSelect(category)">
           {{category.name}}
-          <!-- <span class="badge primary-color badge-pill">{{ lengthTodosByCat(category.id)  }}</span> -->
+          <span class="badge primary-color badge-pill">{{ category.todosCount  }}</span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
           <form>
